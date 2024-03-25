@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@inject IHttpContextAccessor HttpContextAccesor;
+
+@{
+    var sesionBase64 = HttpContextAccesor.HttpContext.Session.GetString("UsuarioObjeto");
+    var base64EncodedBytes = System.Convert.FromBase64String(sesionBase64);
+    var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+    UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
+}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    @foreach (var menu in @UsuarioObjeto.Menu)
+    {
+        bool tiene_submenu = menu.Modulos.Count > 0 ? true : false;
+        string claseMenu = tiene_submenu ? "nav-item dropdown" : "nav-item";
+        <li class="@claseMenu">
+            @if (tiene_submenu)
+            {
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @menu.Descripcion
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdows">
+                    @foreach(var submenu in menu.Modulos)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="" asp-controller="@submenu.Controller" asp-action="@submenu.Metodo">@submenu.Nombre</a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <a class="nav-link" href="#" aria-current="page"> 
+                    @menu.Descripcion
+                </a>
+            }
+
+        </li>
+    }
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @(@UsuarioObjeto.Nombre)
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="CerrarSesion">Cerrar Sesion</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="CambioContrasenia">Cambiar Contraseña</a>
+            </li>
+        </ul>
+    </li>
+</ul>

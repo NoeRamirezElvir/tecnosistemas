@@ -1,0 +1,47 @@
+﻿@model UsuarioVm
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div class="row-6">
+
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="@ViewBag.ClaseMensaje" role="alert" id="success-alert">
+            <strong>@ViewBag.Error</strong>
+        </div>
+    }
+    <div class="main">
+        <div class="login">
+            <div class="insert">
+
+            </div>
+        </div>
+
+        <form method="post" asp-action="Index">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="sign">
+                <div class="submit">
+                    <input type="submit" value="Iniciar Sesion" />
+                </div>
+                <div class="clear"><br /><br /></div>
+            </div>
+        </form>
+
+    </div>
+    <div class="register-message">
+        ¿No tienes una cuenta aún? <a href="@Url.Action("Registro", "Usuario")">Regístrate ahora</a>.
+    </div>
+</div>
+

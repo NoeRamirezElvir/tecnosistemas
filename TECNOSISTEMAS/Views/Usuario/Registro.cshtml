@@ -1,0 +1,83 @@
+﻿@model UsuarioVm
+
+@{
+    ViewData["Title"] = "Registro";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<style>
+    /* Estilos para centrar el formulario */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    /* Estilos para el botón de volver a inicio */
+    .back-button {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="form-container">
+    <div>
+        <h2>Registro</h2>
+
+        <form asp-action="GuardarUsuario" method="post">
+            <div>
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="apellido"></label>
+                <input asp-for="apellido" class="form-control" />
+                <span asp-validation-for="apellido" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="direccion"></label>
+                <input asp-for="direccion" class="form-control" />
+                <span asp-validation-for="direccion" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="DNI"></label>
+                <input asp-for="DNI" class="form-control" />
+                <span asp-validation-for="DNI" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="fechaNacimiento"></label>
+                <input type="date" asp-for="fechaNacimiento" class="form-control" />
+                <span asp-validation-for="fechaNacimiento" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="Password"></label>
+                <input type="password" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label asp-for="telefono"></label>
+                <input asp-for="telefono" class="form-control" />
+                <span asp-validation-for="telefono" class="text-danger"></span>
+            </div>
+            <!-- Agrega los demás campos aquí -->
+
+            <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+        </form> 
+
+        <form asp-action="Index" class="back-button">
+            <button type="submit" class="btn btn-secondary">Volver a Inicio</button>
+        </form>
+    </div>
+</div>

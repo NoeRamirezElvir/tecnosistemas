@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="@ViewBag.ClaseMensaje" role="alert" id="success-alert">
+            <strong>@ViewBag.Error</strong>
+        </div>
+    }
+</div>
