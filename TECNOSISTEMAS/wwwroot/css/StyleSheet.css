@@ -1,0 +1,85 @@
+﻿/* Estilos para las columnas del formulario */
+.form-column {
+    width: 45%;
+    margin-right: 5%;
+    float: left;
+}
+
+    .form-column:last-child {
+        margin-right: 0;
+    }
+
+
+/* Estilos para los selects */
+.select-wrapper {
+    position: relative;
+}
+
+    .select-wrapper select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        border: 1px solid #ccc;
+        padding: 8px 24px 8px 8px;
+        font-size: 16px;
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .select-wrapper::after {
+        content: '\25BC'; /* Flecha hacia abajo */
+        font-size: 14px;
+        color: #555;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* Estilo cuando se enfoca */
+    .select-wrapper select:focus {
+        outline: none;
+        border-color: #007bff; /* Cambia el color al enfocar */
+    }
+
+
+/* Centrar las columnas */
+.form-container {
+    text-align: center;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .form-column {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+        float: none; /* Eliminar el flotador en dispositivos móviles */
+    }
+}
+/* Estilos para el contenedor de botones */
+.form-container {
+    text-align: center; /* Centra los elementos dentro de .form-container */
+}
+
+    .form-container > div {
+        position: relative;
+    }
+
+.button-container {
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; /* Utilizamos flexbox */
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+    .button-container button,
+    .button-container a {
+        margin: 0 5px; /* Espacio entre los botones */
+    }
