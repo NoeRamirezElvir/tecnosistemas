@@ -7,8 +7,10 @@ body {
     background-color: #fff;
 }
 
-.row-6 {
-    margin: 20px;
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .main {
@@ -20,8 +22,55 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
 }
 
-.form-group {
-    margin-bottom: 15px;
+
+.col-md-8 {
+    width: 50%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.col-md-4 {
+    width: 50%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Agrega una sombra al formulario */
+}
+
+
+
+.sign {
+    text-align: center;
+}
+
+.submit {
+    margin-top: 10px;
+}
+
+.register-message {
+    text-align: center;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .col-md-8, .col-md-4 {
+        width: 100%;
+    }
+
+    .login-form {
+        max-width: 100%;
+        padding: 20px;
+        background-color: #f2f2f2; /* Cambiar el color de fondo a tu preferencia */
+        height: 100%;
+        overflow: auto;
+        margin-top: 20px; /* Añade un margen superior para separar el formulario del borde superior en pantallas pequeñas */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Agrega una sombra al formulario en pantallas pequeñas */
+    }
 }
 
 label {
