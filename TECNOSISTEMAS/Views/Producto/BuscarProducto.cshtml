@@ -1,0 +1,87 @@
+﻿@model ProductoVm
+@{
+    ViewData["Title"] = "BuscarProducto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!--NUEVAS VISTAS-->
+<form asp-action="Insertar" method="get">
+    <input type="submit" value="Agregar" class="btn-success" />
+</form>
+
+<form id="frmpbusqueda">
+    <div class="row">
+        <div class="danger">
+            @if (TempData["mensaje"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <p>@TempData["mensaje"]</p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <button type="button" id="btnbuscar">Buscar</button>
+    </div>
+
+    <div class="ScrollB" id="Tabla">
+        <table class="table table-bordered table-striped" id="detalle">
+            <thead>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Costo</th>
+            <th>Categoria</th>
+            <th>Acciones</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <br />
+</form>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#detalle').hide();
+            $('#btnbuscar').click(function () {
+                var tbl = $('#detalle tbody');
+                $('#detalle').find("tr:gt(0)").remove();
+                var form = $('#frmpbusqueda').serialize();
+                console.log(form);
+                $.ajax({
+                    type: "POST",
+                    url: "BuscarProductoNombre",
+                    data: form,
+                    dataType: "json",
+                    success: function (data) {
+
+                        console.log(data.value);
+                        alert(data.value.message);
+                        if (data.value.isValid) {
+                            var html = "";
+                            for (i = 0; i < data.value.data.length; i++) {
+
+                                html += "<tr> " +
+                                    "<td>" + data.value.data[i].nombre + "</td>" +
+                                    "<td>" + data.value.data[i].precio + "</td>" +
+                                    "<td>" + data.value.data[i].costo + "</td>" +
+                                    "<td>" + data.value.data[i].categoria.nombre + "</td>" +
+                                    "<td>" +
+                                    "<a class='btn btn-info' href='/Producto/Editar?ProductoId=" + data.value.data[i].id + "'>Editar</a>" +
+                                    " <a class='btn btn-info' href='/Producto/Eliminar?ProductoId=" + data.value.data[i].id + "'> Eliminar</a>" +
+                                    "</td>" +
+                                    "</tr>";
+                            }
+                            $('#detalle').show();
+                            tbl.append(html);
+                        }
+                    }
+                });
+            })
+        });
+    </script>
+}
