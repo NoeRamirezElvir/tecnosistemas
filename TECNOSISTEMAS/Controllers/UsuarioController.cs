@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using TECNOSISTEMAS.Data;
 using TECNOSISTEMAS.Data.Entidades;
@@ -39,7 +40,7 @@ namespace TECNOSISTEMAS.Controllers
             {
                 ViewBag.Error = "Usuario o la Contraseña no Existen.";
                 return View(new UsuarioVm());
-            }if (string.IsNullOrEmpty(vm.Password) || string.IsNullOrEmpty(vm.Email))
+            } if (string.IsNullOrEmpty(vm.Password) || string.IsNullOrEmpty(vm.Email))
             {
 
                 ViewBag.Error = "Usuario o la Contraseña Incorrectos.";
@@ -64,11 +65,67 @@ namespace TECNOSISTEMAS.Controllers
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(sesionJson);
             var sesionBas64 = System.Convert.ToBase64String(plainTextBytes);
             HttpContext.Session.SetString("UsuarioObjeto", sesionBas64);
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
+        [HttpGet]
         public IActionResult Registro()
         {
-            return View();
+            var roles =_context.Rol.Where(w => w.Eliminado==false).ProjectToType<RolVm>().ToList();
+            List<SelectListItem> itemsroles = roles.ConvertAll(d => {
+                return new SelectListItem
+                {
+                    Text = d.Descripcion,
+                    Value = d.Id.ToString(),
+                    Selected = false
+                };
+            });
+            UsuarioVm usuario = new UsuarioVm();
+            usuario.Roles = itemsroles;
+            return View(usuario);
+        }
+        [HttpPost]
+        public IActionResult Registro(UsuarioVm usuario)
+        {
+            if (!usuario.Validaciones_usuario())
+            {
+                TempData["mensaje"] = "Llene los campos";
+                var roles = _context.Rol.Where(w => w.Eliminado == false).ProjectToType<RolVm>().ToList();
+                List<SelectListItem> itemsRoles = roles.ConvertAll(d =>
+                {
+                    return new SelectListItem
+                    {
+                        Text = d.Descripcion,
+                        Value = d.Id.ToString(),
+                        Selected = false
+                    };
+                });
+
+                usuario.Roles = itemsRoles;
+
+                return View(usuario);
+            }
+
+            Usuario usuarioNuevo = new Usuario();
+            usuarioNuevo.Id = Guid.NewGuid();
+            usuarioNuevo.Nombre = usuario.Nombre;
+            usuarioNuevo.Email = usuario.Email;
+            usuarioNuevo.Password = Utilidades.Utilidades.GetMD5(usuario.Password);
+            usuarioNuevo.apellido = usuario.apellido;
+            usuarioNuevo.direccion = usuario.direccion;
+            usuarioNuevo.DNI = usuario.DNI;
+            usuarioNuevo.fechaNacimiento = usuario.fechaNacimiento;
+            usuarioNuevo.telefono = usuario.telefono;
+            usuarioNuevo.RolId = usuario.RolId;
+            usuarioNuevo.usuario = "Usuario Nuevo";
+            usuarioNuevo.CreatedDate = DateTime.Now;
+            usuarioNuevo.CreatedBy = Guid.Empty;
+            usuarioNuevo.Eliminado = false;
+
+            _context.Usuario.Add(usuarioNuevo);
+            _context.SaveChanges();
+            TempData["mensaje"] = "Registro Exitoso";
+            return RedirectToAction("Index");
+
         }
         //Guardar Usuario
     }

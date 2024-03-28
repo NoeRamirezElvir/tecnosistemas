@@ -1,4 +1,5 @@
-﻿using TECNOSISTEMAS.Data.Entidades;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using TECNOSISTEMAS.Data.Entidades;
 
 namespace TECNOSISTEMAS.Models
 {
@@ -21,7 +22,51 @@ namespace TECNOSISTEMAS.Models
 
         public string usuario { get; set; }
 
+        public Guid RolId { get; set; }
         public RolVm Rol { get; set; }
+        public List<SelectListItem> Roles { get; set; }
         public List<AgrupadoModulosVm> Menu { get; set; }
+
+
+        public bool Validaciones_usuario()
+        {
+
+
+            if (string.IsNullOrEmpty(Nombre))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(Email))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(Password))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(apellido))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(direccion))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(DNI))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(telefono))
+            {
+                return false;
+            }
+            if (RolId == Guid.Empty)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

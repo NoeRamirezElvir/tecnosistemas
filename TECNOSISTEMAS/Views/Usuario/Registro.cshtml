@@ -1,20 +1,25 @@
-﻿@using Microsoft.CodeAnalysis.Differencing
-@model TECNOSISTEMAS.Models.UsuarioVm
+﻿@model UsuarioVm
 
 @{
     ViewData["Title"] = "Registro";
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-<head>
-    <link rel="stylesheet" href="~/css/StyleSheet.css" /> <!-- Ajusta la ruta según la ubicación real de tu archivo CSS -->
-</head>
+
 
 <div class="form-container">
+
     <div>
         <h2>Registro</h2>
 
-        <form asp-action="GuardarUsuario" method="post">
+        <form asp-action="Registro" method="post">
+            @if (TempData["mensaje"] != null)
+                {
+                    
+                    <div class="alert" id="alerta">
+                         @TempData["mensaje"]
+                    </div>
+                }
             <div class="form-column">
                 <div>
                     <label asp-for="Nombre"></label>
@@ -65,34 +70,24 @@
                     <input asp-for="telefono" class="form-control" />
                     <span asp-validation-for="telefono" class="text-danger"></span>
                 </div>
-
-                <div class="form-column">
-                    <div class="select-wrapper">
-                        <!-- Aplica la clase select-wrapper aquí -->
-                        <label asp-for="Rol"></label>
-                        <select asp-for="Rol" class="form-control">
-                            <option value="Administrador">Administrador</option>
-                            <option value="Moderador">Moderador</option>
-                            <option value="Usuario regular">Usuario regular</option>
-                            <option value="Cliente">Cliente</option>
-                            <option value="Invitado">Invitado</option>
-                            <option value="Editor">Editor</option>
-                            <option value="Analista">Analista</option>
-                            <option value="Soporte técnico">Soporte técnico</option>
-                            <option value="Instructor">Instructor</option>
-                            <option value="Desarrollador">Desarrollador</option>
-                        </select>
-                    </div>
-                    <span asp-validation-for="Rol" class="text-danger"></span>
+                <div class="form-group">
+                    <label for="Id" nam class="control-label">Rol</label>
+                    @Html.DropDownList("RolId", Model.Roles, "Seleccione un rol", new { @class = "form-control" })
                 </div>
+                
+                   
 
                 <!-- Agrega los demás campos aquí -->
                 <!-- Botones fuera del contenedor .form-container -->
+
                 <div class="button-container">
-                    <!-- Botones -->
+                    
                     <a href="@Url.Action("Index")" class="btn btn-secondary">Volver a Inicio</a>
-                    <button type="submit" form="guardarUsuarioForm" class="btn btn-primary">Guardar Usuario</button>
+                    
+                        <button type="submit" class="btn btn-success">Guardar Datos</button>
+                    
                 </div>
+                
             </form>
         </div>
     </div
