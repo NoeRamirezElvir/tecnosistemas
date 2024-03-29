@@ -128,5 +128,56 @@ namespace TECNOSISTEMAS.Controllers
 
         }
         //Guardar Usuario
+        [HttpGet]
+        public IActionResult CambiarContraseña()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CambiarContraseña(string nuevaContraseña, string confirmarContraseña)
+        {
+            if (string.IsNullOrEmpty(nuevaContraseña) || string.IsNullOrEmpty(confirmarContraseña))
+            {
+                TempData["mensaje"] = "Por favor ingrese una nueva contraseña y confirme la contraseña.";
+                return RedirectToAction("CambiarContraseña");
+            }
+
+            if (nuevaContraseña != confirmarContraseña)
+            {
+                TempData["mensaje"] = "Las contraseñas no coinciden.";
+                return RedirectToAction("CambiarContraseña");
+            }
+
+            // Obtener la información del usuario de la sesión
+            var sesionBase64 = HttpContext.Session.GetString("UsuarioObjeto");
+            var base64EncodedBytes = System.Convert.FromBase64String(sesionBase64);
+            var usuario = JsonConvert.DeserializeObject<UsuarioVm>(System.Text.Encoding.UTF8.GetString(base64EncodedBytes));
+
+            if (usuario == null)
+            {
+                // Manejar el caso en que el usuario no esté en la sesión
+                TempData["mensaje"] = "Usuario no encontrado";
+                return RedirectToAction("Index", "Home"); // O redirecciona a donde desees
+            }
+
+            var usuarioNuevo = _context.Usuario.FirstOrDefault(u => u.Id == usuario.Id);
+
+            if (usuarioNuevo == null)
+            {
+                TempData["mensaje"] = "Usuario no encontrado";
+                return RedirectToAction("Index", "Home");
+            }
+
+            usuarioNuevo.Password = Utilidades.Utilidades.GetMD5(nuevaContraseña);
+
+            _context.SaveChanges();
+            TempData["mensaje"] = "Cambio de Contraseña Exitoso";
+
+
+            HttpContext.Session.Remove("UsuarioObjeto");
+
+            return RedirectToAction("Index");
+        }
     }
 }

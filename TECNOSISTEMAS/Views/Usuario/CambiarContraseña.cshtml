@@ -1,0 +1,42 @@
+﻿@model UsuarioVm
+@{
+    ViewData["Title"] = "Cambiar Contraseña";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>Cambiar Contraseña</h1>
+
+    <div class="row">
+        <form method="post" asp-action="CambiarContraseña">
+            <div class="row">
+                <div class="danger">
+                    @if (TempData["mensaje"] != null)
+                    {
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <p>@TempData["mensaje"]</p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nuevaContraseña" class="control-label">Nueva Contraseña</label>
+                <input id="nuevaContraseña" name="nuevaContraseña" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="confirmarContraseña" class="control-label">Confirmar Contraseña</label>
+                <input id="confirmarContraseña" name="confirmarContraseña" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Cambiar Contraseña" class="btn btn-success" />
+                <a href="@Url.Action("Index","Home")" class="btn btn-secondary">Volver a Inicio</a>
+            </div>
+        </form>
+    </div>
+</div>

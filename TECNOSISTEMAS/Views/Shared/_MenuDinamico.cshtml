@@ -20,7 +20,7 @@
                     @menu.Descripcion
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdows">
-                    @foreach(var submenu in menu.Modulos)
+                    @foreach (var submenu in menu.Modulos)
                     {
                         <li>
                             <a class="dropdown-item" asp-area="" asp-controller="@submenu.Controller" asp-action="@submenu.Metodo">@submenu.Nombre</a>
@@ -30,7 +30,7 @@
             }
             else
             {
-                <a class="nav-link" href="#" aria-current="page"> 
+                <a class="nav-link" href="#" aria-current="page">
                     @menu.Descripcion
                 </a>
             }
@@ -44,7 +44,7 @@
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
                 <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="CerrarSesion">Cerrar Sesion</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="CambioContrasenia">Cambiar Contraseña</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="CambiarContraseña">Cambiar Contraseña</a>
             </li>
         </ul>
     </li>
