@@ -1,0 +1,63 @@
+﻿
+#frmpbusqueda {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+.table-container {
+    margin-top: 1%;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+
+#detalle table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#detalle td {
+    padding: 8px;
+    border-radius: 5px;
+}
+
+#detalle th {
+    padding: 8px;
+    position: sticky;
+    top: 0;
+    background-color: #3A6F97;
+    color: white;
+}
+
+#detalle tr:nth-child(even) {
+    background-color: #eaeaea;
+}
+
+#btnbuscar {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #3A6F97;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top:2px;
+}
+
+#btnbuscar:hover {
+    background-color: #36608e;
+}
+
+.btn-icon {
+    background-color: transparent; 
+    padding: 0; 
+    border: none; 
+    display: block; 
+    margin-bottom: 5px; 
+}
+
+.btn-icon img {
+    width: 20px;
+    height: 20px;
+}

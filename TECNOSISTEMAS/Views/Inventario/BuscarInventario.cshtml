@@ -4,12 +4,9 @@
     ViewData["Title"] = "BuscarInventario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!--NUEVAS VISTAS-->
-<form asp-action="Insertar" method="get">
-    <input type="submit" value="Agregar" class="btn-success" />
-</form>
-
+<head>
+    <link rel="stylesheet" href="~/css/frmp_busqueda.css" />
+</head>
 <form id="frmpbusqueda">
     <div class="row">
         <div class="danger">
@@ -30,14 +27,14 @@
         <button type="button" id="btnbuscar">Buscar</button>
     </div>
 
-    <div class="ScrollB" id="Tabla">
+    <div class="table-container" id="Tabla">
         <table class="table table-bordered table-striped" id="detalle">
             <thead>
-            <th>Producto</th>
-            <th>Stock Actual</th>
-            <th>Stock Mínimo</th>
-            <th>Stock Máximo</th>
-            <th>Acciones</th>
+                <th>Producto</th>
+                <th>Stock Actual</th>
+                <th>Stock Mínimo</th>
+                <th>Stock Máximo</th>
+                <th>Acciones</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -73,8 +70,8 @@
                                     "<td>" + data.value.data[i].stockMinimo + "</td>" +
                                     "<td>" + data.value.data[i].stockMaximo + "</td>" +
                                     "<td>" +
-                                    "<a class='btn btn-info' href='/Inventario/Editar?InventarioId=" + data.value.data[i].id + "'>Editar</a>" +
-                                    " <a class='btn btn-info' href='/Inventario/Eliminar?InventarioId=" + data.value.data[i].id + "'> Eliminar</a>" +
+                                    "<a class='btn btn-info btn-icon' href='/Inventario/Editar?InventarioId=" + data.value.data[i].id + "'><img src='/img/ic_editar.png' alt='Editar' class='iceditar'></a>" +
+                                    " <a class='btn btn-info btn-icon' href='/Inventario/Eliminar?InventarioId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
                                     "</td>" +
                                     "</tr>";
                             }

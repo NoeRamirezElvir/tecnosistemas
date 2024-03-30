@@ -43,3 +43,26 @@
         </div>
     </div>
 </div>
+<!--MODAL-->
+<div class="modal" id="mensajeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+    </script>
+}

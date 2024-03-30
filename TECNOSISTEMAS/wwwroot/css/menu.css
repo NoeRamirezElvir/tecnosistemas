@@ -1,0 +1,30 @@
+﻿.logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+}
+.logout {
+    width: 30px;
+    height: 30px;
+}
+.icmenu {
+    width: 30px;
+    height: 30px;
+}
+.icinicio {
+    width: 30px;
+    height: 30px;
+}
+.bg-blue {
+    background-color: #046EEE;
+}
+.navbar-light .navbar-brand {
+    color: white;
+    padding-left: 40px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+    padding-left: 40px;
+}
+

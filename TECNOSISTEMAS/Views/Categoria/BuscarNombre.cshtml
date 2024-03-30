@@ -4,7 +4,9 @@
     ViewData["Title"] = "BuscarNombre";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<head>
+    <link rel="stylesheet" href="~/css/frmp_busqueda.css" />
+</head>
 <form id="frmpbusqueda">
     <div class="row">
         <div class="danger">
@@ -24,14 +26,13 @@
         <input asp-for="Nombre" class="form-control" />
         <button type="button" id="btnbuscar">Buscar</button>
     </div>
-
-    <div class="ScrollB" id="Tabla">
+        <div class="table-container" id="Tabla">
         <table class="table table-bordered table-striped" id="detalle">
             <thead>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -66,8 +67,8 @@
                                     "<td>" + data.value.data[i].nombre + "</td>" +
                                     "<td>" + data.value.data[i].descripcion + "</td>" +
                                     "<td>" +
-                                    "<a class='btn btn-info' href='/Categoria/Editar?CategoriaId=" + data.value.data[i].id + "'>Editar</a>" +
-                                    " <a class='btn btn-info' href='/Categoria/Eliminar?CategoriaId=" + data.value.data[i].id + "'> Eliminar</a>" +
+                                    "<a class='btn btn-info btn-icon' href='/Categoria/Editar?CategoriaId=" + data.value.data[i].id + "'><img src='/img/ic_editar.png' alt='Editar' class='iceditar'></a>" +
+                                    " <a class='btn btn-info btn-icon' href='/Categoria/Eliminar?CategoriaId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
                                     "</td>" +
                                     "</tr>";
                             }

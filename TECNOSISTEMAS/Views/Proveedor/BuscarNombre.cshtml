@@ -4,7 +4,9 @@
     ViewData["Title"] = "BuscarNombre";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<head>
+    <link rel="stylesheet" href="~/css/frmp_busqueda.css" />
+</head>
 <form id="frmpbusqueda">
     <div class="row">
         <div class="danger">
@@ -25,14 +27,14 @@
         <button type="button" id="btnbuscar">Buscar</button>
     </div>
 
-    <div class="ScrollB" id="Tabla">
+    <div class="table-container" id="Tabla">
         <table class="table table-bordered table-striped" id="detalle">
             <thead>
-            <th>Nombre</th>
-            <th>Dirección</th>
-            <th>Teléfono</th>
-            <th>Correo Electrónico</th>
-            <th>Acciones</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Correo Electrónico</th>
+                <th>Acciones</th>
             </thead>
             <tbody></tbody>
         </table>
@@ -68,8 +70,8 @@
                                     "<td>" + data.value.data[i].telefono + "</td>" +
                                     "<td>" + data.value.data[i].correoElectronico + "</td>" +
                                     "<td>" +
-                                    "<a class='btn btn-info' href='/Proveedor/Editar?ProveedorId=" + data.value.data[i].id + "'>Editar</a>" +
-                                    " <a class='btn btn-info' href='/Proveedor/Eliminar?ProveedorId=" + data.value.data[i].id + "'> Eliminar</a>" +
+                                    "<a class='btn btn-info btn-icon' href='/Proveedor/Editar?ProveedorId=" + data.value.data[i].id + "'><img src='/img/ic_editar.png' alt='Editar' class='iceditar'></a>" +
+                                    " <a class='btn btn-info btn-icon' href='/Proveedor/Eliminar?ProveedorId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
                                     "</td>" +
                                     "</tr>";
                             }
