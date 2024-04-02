@@ -1,0 +1,79 @@
+﻿@model List<ClienteVm>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/frmp_index.css" />
+</head>
+<div class="form-container">
+    <div class="tittle"><h1>Consulta de Cliente</h1></div>
+    <div class="buscar-container">
+        <form class="buscar-form-nombre" asp-action="BuscarNombre" method="get">
+            <input type="submit" value="Buscar Nombre" class="btn btn-success" />
+        </form>
+    </div>
+    <form asp-action="Insertar" method="get">
+        <div class="form-group">
+            <input type="submit" value="Agregar" class="btn btn-success" />
+        </div>
+        @if (Model.Count > 0)
+        {
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>RTN</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Nombre</td>
+                                <td>@item.Apellido</td>
+                                <td>@item.Direccion</td>
+                                <td>@item.Telefono</td>
+                                <td>@item.RTN</td>
+                                <td>
+                                    <a href="@Url.Action("Editar", "Cliente", new { ClienteId = item.Id })" class="btn btn-info btn-icon"><img src='~/img/ic_editar.png' alt='Editar' class='iceditar'></a>
+                                    <a href="@Url.Action("Eliminar", "Cliente", new { ClienteId = item.Id })" class="btn btn-info btn-icon"><img src='~/img/ic_eliminar.png' alt='Editar' class='iceditar'></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <br />
+        }
+    </form>
+</div>
+<!--MODAL-->
+<div class="modal" id="mensajeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿@model ClienteVm
+
+@{
+    ViewData["Title"] = "Insertar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/frmp_acciones.css" />
+</head>
+<div class="acciones-container">
+    <div class="tittle"><h1>Insertar Cliente</h1></div>
+    <div class="form-container-acciones">
+        <form asp-action="Insertar" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Nombre" class="control-label"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Apellido" class="control-label"></label>
+                        <input asp-for="Apellido" class="form-control" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Direccion" class="control-label">Dirección</label>
+                        <input asp-for="Direccion" class="form-control" />
+                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Telefono" class="control-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RTN" class="control-label">RTN</label>
+                        <input asp-for="RTN" class="form-control" />
+                        <span asp-validation-for="RTN" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Insertar" class="btn btn-success" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--MODAL-->
+<div class="modal" id="mensajeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+    </script>
+}
+
