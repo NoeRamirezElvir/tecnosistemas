@@ -1,4 +1,4 @@
-﻿@model ImpuestoVm
+﻿@model SarVm
 
 @{
     ViewData["Title"] = "BuscarNombre";
@@ -22,18 +22,20 @@
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Nombre" class="control-label"></label>
-        <input asp-for="Nombre" class="form-control" />
+        <label asp-for="CAI" class="control-label"></label>
+        <input asp-for="CAI" class="form-control" />
         <button type="button" id="btnbuscar">Buscar</button>
     </div>
+
     <div class="table-container" id="Tabla">
         <table class="table table-bordered table-striped" id="detalle">
             <thead>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Valor</th>
+            <th>CAI</th>
+            <th>Rango Inicial</th>
+            <th>Rango Final</th>
+            <th>Limite Emision</th>
             <th>Acciones</th>
-             </thead>
+            </thead>
             <tbody></tbody>
         </table>
     </div>
@@ -51,7 +53,7 @@
                 console.log(form);
                 $.ajax({
                     type: "POST",
-                    url: "BuscarCategoriaNombre",
+                    url: "BuscarSarNombre",
                     data: form,
                     dataType: "json",
                     success: function (data) {
@@ -63,12 +65,13 @@
                             for (i = 0; i < data.value.data.length; i++) {
 
                                 html += "<tr> " +
-                                    "<td>" + data.value.data[i].id + "</td>" +
-                                    "<td>" + data.value.data[i].nombre + "</td>" +
-                                    "<td>" + data.value.data[i].valor + "</td>" +
+                                    "<td>" + data.value.data[i].cai + "</td>" +
+                                    "<td>" + data.value.data[i].rangoinicial + "</td>" +
+                                    "<td>" + data.value.data[i].rangofinal + "</td>" +
+                                    "<td>" + data.value.data[i].limitemision + "</td>" +
                                     "<td>" +
-                                    "<a class='btn btn-info btn-icon' href='/Impuesto/Editar?ImpuestoId=" + data.value.data[i].id + "'><img src='/img/ic_editar.png' alt='Editar' class='iceditar'></a>" +
-                                    " <a class='btn btn-info btn-icon' href='/Impuesto/Eliminar?ImpuestoId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
+                                    "<a class='btn btn-info btn-icon' href='/Sar/Editar?SarId=" + data.value.data[i].id + "'><img src='/img/ic_editar.png' alt='Editar' class='iceditar'></a>" +
+                                    " <a class='btn btn-info btn-icon' href='/Sar/Eliminar?SarId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
                                     "</td>" +
                                     "</tr>";
                             }

@@ -1,4 +1,5 @@
-﻿@model DescuentoVm
+﻿@model SarVm
+
 @{
     ViewData["Title"] = "Editar";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,23 +8,33 @@
     <link rel="stylesheet" href="~/css/frmp_acciones.css" />
 </head>
 <div class="acciones-container">
-    <div class="tittle"><h1>Editar Descuento</h1></div>
+    <div class="tittle"><h1>Editar Cliente</h1></div>
     <div class="form-container-acciones">
         <form asp-action="Editar" method="post">
             <input asp-for="Id" type="hidden" class="form-control" />
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label asp-for="Nombre" class="control-label">Nombre</label>
-                        <input asp-for="Nombre" class="form-control" />
-                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                        <label asp-for="CAI" class="control-label">CAI</label>
+                        <input asp-for="CAI" class="form-control" />
+                        <span asp-validation-for="CAI" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RangoInicial" class="control-label">Rango Inicial</label>
+                        <input asp-for="RangoInicial" class="form-control" />
+                        <span asp-validation-for="RangoInicial" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="RangoFinal" class="control-label">Rango Final</label>
+                        <input asp-for="RangoFinal" class="form-control" />
+                        <span asp-validation-for="RangoFinal" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label asp-for="Valor" class="control-label">Valor</label>
-                        <input asp-for="Valor" class="form-control" />
-                        <span asp-validation-for="Valor" class="text-danger"></span>
+                        <label asp-for="LimitEmision" class="control-label">Limite Emision</label>
+                        <input asp-for="LimitEmision" class="form-control" />
+                        <span asp-validation-for="LimitEmision" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
