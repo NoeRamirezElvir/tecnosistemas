@@ -1,0 +1,119 @@
+﻿@model BuscarCompraVm
+@{
+    ViewData["Title"] = "BuscarCompra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/frmp_busqueda.css" />
+</head>
+<div class="form-group">
+    <form asp-action="Insertar" method="get">
+        <div class="form-group">
+            <input id="btnBuscarFechas" type="submit" value="Agregar" class="btn btn-success" />
+        </div>
+    </form>
+</div>
+<form id="frmpbusqueda">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="FechaInicial" class="control-label"></label>
+                <input asp-for="FechaInicial" class="form-control" type="date" />
+                <button type="button" id="btnbuscar">Buscar</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="FechaFinal" class="control-label"></label>
+                <input asp-for="FechaFinal" class="form-control" type="date"/>
+            </div>
+        </div>
+    </div>
+    <div class="table-container" id="Tabla">
+        <table class="table table-bordered table-striped" id="detalle">
+            <thead>
+                <th>Id</th>
+                <th>Totall</th>
+                <th>Fecha de Registro</th>
+                <th>Acciones</th>
+              </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <br />
+</form>
+
+<!--MODAL ERRORES-->
+<div class="modal" id="mensajeModal" style="margin-top:100px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        //Modal Error
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#detalle').hide();
+
+            function buscarCompra() {
+                var tbl = $('#detalle tbody');
+                $('#detalle').find("tr:gt(0)").remove();
+                var form = $('#frmpbusqueda').serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "BuscarCompraFecha",
+                    data: form,
+                    dataType: "json",
+                    success: function (data) {
+                        alert(data.value.message);
+                        if (data.value.isValid) {
+                            var html = "";
+                            for (i = 0; i < data.value.data.length; i++) {
+                                var fecha = new Date(data.value.data[i].createdDate).toLocaleString('es-ES', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                                html += "<tr> " +
+                                    "<td>" + data.value.data[i].id + "</td>" +
+                                    "<td>" + data.value.data[i].total + "</td>" +
+                                    "<td>" + fecha + "</td>" +
+                                    "<td>" +
+                                    "<a class='btn btn-info btn-icon' href='/CompraProducto/Ver?CompraId=" + data.value.data[i].id + "'><img src='/img/ic_ver.png' alt='Ver' class='iceditar'></a>" +
+                                    " <a class='btn btn-info btn-icon' href='/CompraProducto/Eliminar?CompraId=" + data.value.data[i].id + "'><img src='/img/ic_eliminar.png' alt='Eliminar' class='iceliminar'></a>" +
+                                    "</td>" +
+                                    "</tr>";
+                            }
+                            $('#detalle').show();
+                            tbl.append(html);
+                        }
+                    }
+                });
+            }
+            $('#btnbuscar').click(function () {
+                buscarCompra();
+            });
+            buscarCompra();
+        });
+    </script>
+
+}

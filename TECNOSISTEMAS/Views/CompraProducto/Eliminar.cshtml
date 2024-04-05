@@ -1,0 +1,143 @@
+﻿@model BuscarCompraVm
+@{
+    ViewData["Title"] = "Eliminar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var jsonString = Model.IdProductoLista;
+    jsonString = jsonString.TrimStart('[').TrimEnd(']');
+    var productos = jsonString.Split(new[] { "},{" }, StringSplitOptions.None)
+                               .Select(x => x.Trim('{', '}'))
+                               .ToList();
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/frmp_acciones.css" />
+</head>
+<div class="acciones-container">
+    <div class="tittle"><h1>Compra</h1></div>
+    <div class="form-container-acciones">
+        <form asp-action="Eliminar" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="NuevaCompra.CreatedDate" class="control-label">Fecha</label>
+                        <input asp-for="NuevaCompra.CreatedDate" class="form-control" type="date" readonly />
+                        <span asp-validation-for="NuevaCompra.CreatedDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="usuario" class="control-label">Tramitante</label>
+                        <input asp-for="usuario" class="form-control" readonly />
+                        <span asp-validation-for="usuario" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="NuevaCompra.Total" class="control-label"></label>
+                        <input asp-for="NuevaCompra.Total" class="form-control" readonly />
+                        <span asp-validation-for="NuevaCompra.Total" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button id="btnMostrarModal" type="button" class="btn btn-primary">
+                            Mostrar Productos
+                        </button>
+                    </div>
+                </div>
+                <input asp-for="NuevaCompra.Id" type="hidden" class="form-control" />
+                <input id="IdProductoLista" name="IdProductoLista" type="hidden" class="form-control" value="@Model.IdProductoLista" />
+                <div class="form-group">
+                    <input type="submit" value="Eliminar" class="btn btn-success" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!--MODAL PRODUCTOS-->
+<div class="modal-ver modal fade" id="modalAgregarProductos" tabindex="-1" role="dialog" aria-labelledby="modalAgregarProductosLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="table-container-detalles">
+                    <table id="tablaProductos" class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Producto</th>
+                                <th>Cantidad</th>
+                                <th>Proveedor</th>
+                                <th>Costo</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var producto in productos)
+                            {
+                                var cantidadS = 0;
+                                var costoS = 0.0;
+                                var propiedades = producto.Split(',');
+                                <tr>
+                                    @foreach (var propiedad in propiedades)
+                                    {
+                                        var partes = propiedad.Split(':');
+                                        var nombre = partes[0].Trim('"');
+                                        var valor = partes[1].Trim('"');
+                                        if (nombre == "nombre" || nombre == "proveedorNombre" || nombre == "cantidad" || nombre == "costo")
+                                        {
+                                            <td>@valor</td>
+                                            if (nombre == "cantidad")
+                                            {
+                                                cantidadS = int.Parse(valor);
+                                            }
+                                            else if (nombre == "costo")
+                                            {
+                                                costoS = double.Parse(valor);
+                                            }
+                                        }
+                                    }
+
+                                    <td>@(cantidadS * costoS)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--MODAL ERRORES-->
+<div class="modal" id="mensajeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        //Modal Error
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+        //Modal Producto
+        $("#btnMostrarModal").click(function (event) {
+            event.preventDefault();
+            $('#modalAgregarProductos').modal('show');
+        });
+    </script>
+
+}

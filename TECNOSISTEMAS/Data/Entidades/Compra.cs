@@ -1,17 +1,15 @@
 ﻿namespace TECNOSISTEMAS.Data.Entidades
 {
-    public class Proveedor
+    public class Compra
     {
-        //Atributos 
-        public string Nombre { set; get; }
-        public string Direccion { set; get; }
-        public string Telefono { set; get; }
-        public string CorreoElectronico { set; get; }
+        //Atributos
+        public double Total { set; get; }
+
         //Relacion CompraProducto
         public ICollection<CompraProducto> CompraProducto { set; get; }
 
         //Constructor
-        public Proveedor()
+        public Compra()
         {
             CompraProducto = new HashSet<CompraProducto>();
         }
@@ -21,8 +19,5 @@
         public bool Eliminado { set; get; }
         public DateTime CreatedDate { set; get; }
         public Guid CreatedBy { set; get; }
-
-
-
     }
 }

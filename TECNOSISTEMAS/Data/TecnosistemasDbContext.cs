@@ -15,6 +15,8 @@ namespace TECNOSISTEMAS.Data
         public DbSet<Impuesto> Impuesto { get; set; }
         public DbSet<Descuento> Descuento { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<Compra> Compra { get; set; }
+        public DbSet<CompraProducto> CompraProducto { get; set; }
 
 
         //Variables de sesion
@@ -34,6 +36,8 @@ namespace TECNOSISTEMAS.Data
             modelBuilder.ApplyConfiguration(new ImpuestoConfig());
             modelBuilder.ApplyConfiguration(new DescuentoConfig());
             modelBuilder.ApplyConfiguration(new ClienteConfig());
+            modelBuilder.ApplyConfiguration(new CompraConfig());
+            modelBuilder.ApplyConfiguration(new CompraProductoConfig());
 
             //Variables de Sesion
             modelBuilder.ApplyConfiguration(new RolConfig());

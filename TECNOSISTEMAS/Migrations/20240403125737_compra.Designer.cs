@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TECNOSISTEMAS.Data;
 
@@ -11,9 +12,10 @@ using TECNOSISTEMAS.Data;
 namespace TECNOSISTEMAS.Migrations
 {
     [DbContext(typeof(TecnosistemasDbContext))]
-    partial class TecnosistemasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240403125737_compra")]
+    partial class compra
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

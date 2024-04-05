@@ -16,6 +16,7 @@ namespace TECNOSISTEMAS.Data
                 builder.Property(x => x.Direccion).HasColumnType("varchar(50)");
                 builder.Property(x => x.Telefono).HasColumnType("varchar(15)");
                 builder.Property(x => x.CorreoElectronico).HasColumnType("varchar(50)");
+                builder.HasMany(x => x.CompraProducto).WithOne(a => a.Proveedor).HasForeignKey(x => x.IdProveedor);
             }
 
         }
@@ -42,6 +43,7 @@ namespace TECNOSISTEMAS.Data
                 builder.Property(x => x.Precio).HasColumnType("decimal(10,2)");
                 builder.Property(x => x.Costo).HasColumnType("decimal(10,2)");
                 builder.Property(x => x.Activo);
+                builder.HasMany(x => x.CompraProducto).WithOne(a => a.Producto).HasForeignKey(x => x.IdProducto);
 
             }
 
@@ -105,7 +107,32 @@ namespace TECNOSISTEMAS.Data
                 builder.Property(s => s.RTN).HasColumnType("varchar(18)").HasColumnName("RTN");
             }
         }
+        //CONFIG COMPRA
+        public class CompraConfig : IEntityTypeConfiguration<Compra>
+        {
+            public void Configure(EntityTypeBuilder<Compra> builder)
+            {
+                builder.HasKey(x => x.Id);
+                builder.HasMany(x => x.CompraProducto).WithOne(a => a.Compra).HasForeignKey(x => x.IdCompra);
+                builder.Property(x => x.Total).HasColumnType("decimal(18,2)");
 
+            }
+
+        }
+        //CONFIG COMPRAPRODUCTO
+        public class CompraProductoConfig : IEntityTypeConfiguration<CompraProducto>
+        {
+            public void Configure(EntityTypeBuilder<CompraProducto> builder)
+            {
+                builder.HasKey(x => x.Id);
+                builder.Property(x => x.Cantidad).HasColumnType("int");
+                builder.Property(x => x.CostoCompra).HasColumnType("decimal(18,2)");
+                builder.Property(x => x.PrecioVenta).HasColumnType("decimal(18,2)");
+                builder.Property(x => x.Subtotal).HasColumnType("decimal(18,2)");
+
+            }
+
+        }
 
         //Variables de Sesion
         public class UsuarioConfig : IEntityTypeConfiguration<Usuario>

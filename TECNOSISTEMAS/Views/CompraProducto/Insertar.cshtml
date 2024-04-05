@@ -1,0 +1,234 @@
+﻿@model CompraProductoVm
+@{
+    ViewData["Title"] = "Insertar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <link rel="stylesheet" href="~/css/frmp_acciones.css" />
+</head>
+<div class="acciones-container">
+    <div class="tittle"><h1>Compra</h1></div>
+    <div class="form-container-acciones">
+        <form asp-action="Insertar" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="CreatedDate" class="control-label">Fecha</label>
+                        <input asp-for="CreatedDate" class="form-control" type="date" readonly/>
+                        <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="usuario" class="control-label">Tramitante</label>
+                        <input asp-for="usuario" class="form-control" readonly />
+                        <span asp-validation-for="usuario" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Total" class="control-label"></label>
+                        <input asp-for="Total" class="form-control" readonly/>
+                        <span asp-validation-for="Total" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <button id="btnMostrarModal" type="button" class="btn btn-primary">
+                            Seleccionar Productos
+                        </button>
+                    </div>
+                </div>
+                <input id="IdProductoLista" name="IdProductoLista" type="hidden" class="form-control" value="@Model.IdProductoLista" />
+                <div class="form-group">
+                    <input type="submit" value="Insertar" class="btn btn-success" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!--MODAL PRODUCTOS-->
+<div class="modal fade" id="modalAgregarProductos" tabindex="-1" role="dialog" aria-labelledby="modalAgregarProductosLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+              
+                <div class="container-lista">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="productoSelect" class="control-label">Producto</label>
+                                <select id="productoSelect" class="form-control">
+                                    <option value="0">Seleccione un producto</option>
+                                    @foreach (var item in Model.ProductoLista)
+                                    {
+                                        <option value="@item.Value" data-costo="@item.Text.Split('-')[1].Trim()">
+                                            @item.Text.Split('-')[0].Trim()
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="IdProveedor" class="control-label">Proveedor</label>
+                                <select id="IdProveedor" class="form-control">
+                                    <option value="0">Seleccione un proveedor</option>
+                                    @foreach (var item in Model.ProveedorLista)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Cantidad" class="control-label">Cantidad</label>
+                                <input id="Cantidad" type="number" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" onclick="agregarProducto()" class="btn btn-primary">Agregar</button>
+                        </div>
+                        <div class="table-container-detalles">
+                            <table id="tablaProductos" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Costo</th>
+                                        <th>Proveedor</th>
+                                        <th>Cantidad</th>
+                                        <th>Acciones</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--MODAL ERRORES-->
+<div class="modal" id="mensajeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @TempData["mensaje"]
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        //Modal Error
+        $(document).ready(function () {
+            var mensaje = '@TempData["mensaje"]';
+            if (mensaje !== "") {
+                $("#mensajeModal").modal("show");
+                setTimeout(function () {
+                    $("#mensajeModal").modal("hide");
+                }, 3000);
+            }
+        });
+        //Modal Producto
+        $("#btnMostrarModal").click(function (event) {
+            event.preventDefault();
+            $('#modalAgregarProductos').modal('show');
+        });
+    </script>
+    <script>
+        var productosSeleccionados = [];
+
+        $(document).ready(function () {
+            var json = $("#IdProductoLista").val();
+            if (json) {
+                productosSeleccionados = JSON.parse(json);
+                actualizarTabla();
+                actualizarTotal();
+            }
+        });
+
+        function actualizarTabla() {
+            $("#tablaProductos tbody").empty();
+            productosSeleccionados.forEach(function (producto, index) {
+                var fila = $("<tr>").append(
+                    $("<td>").text(producto.nombre),
+                    $("<td>").text(producto.costo.toFixed(2)),
+                    $("<td>").text(producto.proveedorNombre),
+                    $("<td>").text(producto.cantidad),
+                    $("<td>").append(
+                        $("<button>").text("Eliminar").addClass("btn btn-danger").click(function () {
+                            eliminarProducto(index);
+                        })
+                    )
+                );
+                $("#tablaProductos tbody").append(fila);
+            });
+        }
+
+        function eliminarProducto(index) {
+            productosSeleccionados.splice(index, 1);
+            $("#IdProductoLista").val(JSON.stringify(productosSeleccionados));
+            actualizarTabla();
+            actualizarTotal();
+        }
+
+        function agregarProducto() {
+            var idProducto = $("#productoSelect").val();
+            var cantidad = parseFloat($("#Cantidad").val());
+            var idProveedor = $("#IdProveedor").val();
+
+            if (idProducto === "0" || isNaN(cantidad) || cantidad <= 0 || idProveedor === "0") {
+                return;
+            }
+
+            var productoExistente = productosSeleccionados.find(function (item) {
+                return item.id === idProducto;
+            });
+
+            if (productoExistente) {
+                return;
+            }
+
+            var costoProducto = parseFloat($("#productoSelect option[value='" + idProducto + "']").data("costo").substring(1));
+            var nombreProducto = $("#productoSelect option[value='" + idProducto + "']").text();
+            var nombreProveedor = $("#IdProveedor option[value='" + idProveedor + "']").text();
+
+            var nuevoProducto = {
+                id: idProducto,
+                nombre: nombreProducto,
+                cantidad: cantidad,
+                proveedor: idProveedor,
+                proveedorNombre: nombreProveedor,
+                costo: costoProducto
+            };
+
+            productosSeleccionados.push(nuevoProducto);
+            $("#IdProductoLista").val(JSON.stringify(productosSeleccionados));
+            actualizarTabla();
+            actualizarTotal();
+        }
+
+        function actualizarTotal() {
+            var total = 0;
+
+            productosSeleccionados.forEach(function (producto) {
+                var costo = parseFloat(producto.costo);
+                if (!isNaN(costo)) {
+                    total += producto.cantidad * costo;
+                }
+            });
+
+            $("#Total").val(total.toFixed(2));
+        }
+    </script>
+
+
+
+}

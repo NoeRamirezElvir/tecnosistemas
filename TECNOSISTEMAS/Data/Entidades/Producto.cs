@@ -12,11 +12,14 @@
         public Categoria Categoria { set; get; }
         //Relacion Inventario
         public ICollection<Inventario> Inventario { set; get; }
+        //Relacion CompraProducto
+        public ICollection<CompraProducto> CompraProducto { set; get; }
 
         //Constructor
         public Producto()
         {
             Inventario = new HashSet<Inventario>();
+            CompraProducto = new HashSet<CompraProducto>();
         }
 
         //Obligatorios
