@@ -18,7 +18,7 @@ namespace TECNOSISTEMAS.Models
 
 
         //Validaciones
-        public string Validacion()
+        public string Validacion(bool existente)
         {
             //Nombre
             if (string.IsNullOrEmpty(Nombre))
@@ -88,6 +88,10 @@ namespace TECNOSISTEMAS.Models
             if (RTN.Length > 14)
             {
                 return "El RTN es muy largo";
+            }
+            if (existente)
+            {
+                return "El RTN ya está registrado";
             }
 
             return string.Empty; //Si no hay errores manda la cadena vacia

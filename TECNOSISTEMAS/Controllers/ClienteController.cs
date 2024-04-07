@@ -43,17 +43,10 @@ namespace TECNOSISTEMAS.Controllers
             var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
             //
-            if (!string.IsNullOrEmpty(cliente.Validacion()))
+            bool rtnExistente = _context.Cliente.Any(c => c.RTN == cliente.RTN && c.Id != cliente.Id && !c.Eliminado);
+            if (!string.IsNullOrEmpty(cliente.Validacion(rtnExistente)))
             {
-                //Esta validacion se hace solo si se quiere comprobar que no se repita un atributo en la base de datos
-                bool rtnExistente = _context.Cliente.Any(c => c.RTN == cliente.RTN);
-                if (rtnExistente)
-                {
-                    TempData["mensaje"] = "El RTN ya está registrado en la base de datos.";
-                    return View(cliente);
-                }
-                //
-                TempData["mensaje"] = cliente.Validacion(); //Captura el mensaje del modelo
+                TempData["mensaje"] = cliente.Validacion(rtnExistente); //Captura el mensaje del modelo
                 return View(cliente);
             }
             Cliente nuevoRegistro = new Cliente();
@@ -86,19 +79,14 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Cliente")] //Filtros
         public IActionResult Editar(ClienteVm cliente)
         {
-            if (!string.IsNullOrEmpty(cliente.Validacion()))
+            bool rtnExistente = _context.Cliente.Any(c => c.RTN == cliente.RTN && c.Id != cliente.Id && !c.Eliminado);
+
+            if (!string.IsNullOrEmpty(cliente.Validacion(rtnExistente)))
             {
-                //Esta validacion se hace solo si se quiere comprobar que no se repita un atributo en la base de datos
-                bool rtnExistente = _context.Cliente.Any(c => c.RTN == cliente.RTN);
-                if (rtnExistente)
-                {
-                    TempData["mensaje"] = "El RTN ya está registrado en la base de datos.";
-                    return View(cliente);
-                }
-                //
-                TempData["mensaje"] = cliente.Validacion(); //Captura el mensaje del modelo
+                TempData["mensaje"] = cliente.Validacion(rtnExistente); //Captura el mensaje del modelo
                 return View(cliente);
             }
+
             var nuevoRegistro = _context.Cliente.Where(w => w.Id == cliente.Id).FirstOrDefault();
             nuevoRegistro.Nombre = cliente.Nombre;
             nuevoRegistro.Apellido = cliente.Apellido;

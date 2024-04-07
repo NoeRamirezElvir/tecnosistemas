@@ -25,7 +25,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Producto")] //Filtros
         public IActionResult Index()
         {
-            var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+            var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
             return View(producto);
         }
         //Buscar Nombre
@@ -45,7 +45,7 @@ namespace TECNOSISTEMAS.Controllers
                 var errorResult = AppResult.Error(errorMessage);
                 return new JsonResult(BadRequest(errorResult));
             }
-            var producto = _context.Producto.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).ProjectToType<ProductoVm>().ToList();
+            var producto = _context.Producto.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
             var result = producto.Count == 0 ? AppResult.Error("No se encontro el producto") : AppResult.Success("Producto encontrado", producto);
             return new JsonResult(Ok(result));
         }
@@ -54,7 +54,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Producto")] //Filtros
         public IActionResult Insertar()
         {
-            var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+            var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<CategoriaVm>().ToList();
             List<SelectListItem> items = categoria.ConvertAll(d => {
                 return new SelectListItem
                 {
@@ -77,10 +77,10 @@ namespace TECNOSISTEMAS.Controllers
             var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
             //
-            if (!producto.Validacion())
+            bool existente = _context.Producto.Any(c => c.Nombre == producto.Nombre && !c.Eliminado && c.Id != producto.Id);
+            if (!string.IsNullOrEmpty(producto.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
-                var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+                var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<CategoriaVm>().ToList();
                 List<SelectListItem> items = categoria.ConvertAll(d => {
                     return new SelectListItem
                     {
@@ -90,8 +90,10 @@ namespace TECNOSISTEMAS.Controllers
                     };
                 });
                 producto.CategoriaLista = items;
+                TempData["mensaje"] = producto.Validacion(existente); //Captura el mensaje del modelo
                 return View(producto);
             }
+            //
             Producto nuevoRegistro = new Producto();
             nuevoRegistro.Nombre = producto.Nombre;
             nuevoRegistro.Precio = producto.Precio;
@@ -114,7 +116,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Producto")] //Filtros
         public IActionResult Editar(Guid ProductoId)
         {
-            var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+            var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<CategoriaVm>().ToList();
             List<SelectListItem> items = categoria.ConvertAll(d => {
                 return new SelectListItem
                 {
@@ -131,10 +133,11 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Producto")] //Filtros
         public IActionResult Editar(ProductoVm producto)
         {
-            if (!producto.Validacion())
+            //
+            bool existente = _context.Producto.Any(c => c.Nombre == producto.Nombre && !c.Eliminado && c.Id != producto.Id);
+            if (!string.IsNullOrEmpty(producto.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
-                var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+                var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<CategoriaVm>().ToList();
                 List<SelectListItem> items = categoria.ConvertAll(d => {
                     return new SelectListItem
                     {
@@ -144,8 +147,10 @@ namespace TECNOSISTEMAS.Controllers
                     };
                 });
                 producto.CategoriaLista = items;
+                TempData["mensaje"] = producto.Validacion(existente); //Captura el mensaje del modelo
                 return View(producto);
             }
+            //
             var nuevoRegistro = _context.Producto.Where(w => w.Id == producto.Id).FirstOrDefault();
             nuevoRegistro.Nombre = producto.Nombre;
             nuevoRegistro.Precio = producto.Precio;
@@ -161,7 +166,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Producto")] //Filtros
         public IActionResult Eliminar(Guid ProductoId)
         {
-            var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+            var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<CategoriaVm>().ToList();
             List<SelectListItem> items = categoria.ConvertAll(d => {
                 return new SelectListItem
                 {

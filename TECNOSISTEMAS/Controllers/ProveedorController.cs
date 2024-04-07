@@ -23,7 +23,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Proveedor")] //Filtros
         public IActionResult Index()
         {
-            var proveedor = _context.Proveedor.Where(w => w.Eliminado == false).ProjectToType<ProveedorVm>().ToList();
+            var proveedor = _context.Proveedor.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProveedorVm>().ToList();
             return View(proveedor);
         }
         //Insertar
@@ -44,11 +44,13 @@ namespace TECNOSISTEMAS.Controllers
             var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
             //
-            if (!proveedor.Validacion())
+            bool existente = _context.Proveedor.Any(c => c.Nombre == proveedor.Nombre && !c.Eliminado && c.Id != proveedor.Id);
+            if (!string.IsNullOrEmpty(proveedor.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
+                TempData["mensaje"] = proveedor.Validacion(existente); //Captura el mensaje del modelo
                 return View(proveedor);
             }
+            //
             Proveedor nuevoRegistro = new Proveedor();
             nuevoRegistro.Nombre = proveedor.Nombre;
             nuevoRegistro.Direccion = proveedor.Direccion;
@@ -71,18 +73,21 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Proveedor")] //Filtros
         public IActionResult Editar(Guid ProveedorId)
         {
-            var proveedor = _context.Proveedor.Where(w => w.Id == ProveedorId).ProjectToType<ProveedorVm>().FirstOrDefault();
+            var proveedor = _context.Proveedor.Where(w => w.Id == ProveedorId).OrderBy(p => p.Nombre).ProjectToType<ProveedorVm>().FirstOrDefault();
             return View(proveedor);
         }
         [HttpPost]
         [ClaimRequirement("Proveedor")] //Filtros
         public IActionResult Editar(ProveedorVm proveedor)
         {
-            if (!proveedor.Validacion())
+            //
+            bool existente = _context.Proveedor.Any(c => c.Nombre == proveedor.Nombre && !c.Eliminado && c.Id != proveedor.Id);
+            if (!string.IsNullOrEmpty(proveedor.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
+                TempData["mensaje"] = proveedor.Validacion(existente); //Captura el mensaje del modelo
                 return View(proveedor);
             }
+            //
             var nuevoRegistro = _context.Proveedor.Where(w => w.Id == proveedor.Id).FirstOrDefault();
             nuevoRegistro.Nombre = proveedor.Nombre;
             nuevoRegistro.Direccion = proveedor.Direccion;
@@ -99,7 +104,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Proveedor")] //Filtros
         public IActionResult Eliminar(Guid ProveedorId)
         {
-            var proveedor = _context.Proveedor.Where(w => w.Id == ProveedorId).ProjectToType<ProveedorVm>().FirstOrDefault();
+            var proveedor = _context.Proveedor.Where(w => w.Id == ProveedorId).OrderBy(p => p.Nombre).ProjectToType<ProveedorVm>().FirstOrDefault();
             return View(proveedor);
         }
         [HttpPost]
@@ -131,7 +136,7 @@ namespace TECNOSISTEMAS.Controllers
                 var errorResult = AppResult.Error(errorMessage);
                 return new JsonResult(BadRequest(errorResult));
             }
-            var proveedor = _context.Proveedor.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).ProjectToType<ProveedorVm>().ToList();
+            var proveedor = _context.Proveedor.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).OrderBy(p => p.Nombre).ProjectToType<ProveedorVm>().ToList();
             var result = proveedor.Count == 0 ? AppResult.Error("No se encontro el Proveedor") : AppResult.Success("Proveedor encontrado", proveedor);
             return new JsonResult(Ok(result));
         }

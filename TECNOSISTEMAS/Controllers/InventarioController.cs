@@ -24,7 +24,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Inventario")] //Filtros
         public IActionResult Index()
         {
-            var inventario = _context.Inventario.Where(w => w.Eliminado == false).ProjectToType<InventarioVm>().ToList();
+            var inventario = _context.Inventario.Where(w => w.Eliminado == false).OrderBy(p => p.Producto.Nombre).ProjectToType<InventarioVm>().ToList();
             return View(inventario);
         }
         //Buscar Nombre Producto
@@ -44,7 +44,7 @@ namespace TECNOSISTEMAS.Controllers
                 var errorResult = AppResult.Error(errorMessage);
                 return new JsonResult(BadRequest(errorResult));
             }
-            var inventario = _context.Inventario.Where(w => w.Eliminado == false && w.Producto.Nombre.ToLower() == vm.Producto.Nombre.ToLower()).ProjectToType<InventarioVm>().ToList();
+            var inventario = _context.Inventario.Where(w => w.Eliminado == false && w.Producto.Nombre.ToLower() == vm.Producto.Nombre.ToLower()).OrderBy(p => p.Producto.Nombre).ProjectToType<InventarioVm>().ToList();
             var result = inventario.Count == 0 ? AppResult.Error("No se encontro el producto") : AppResult.Success("Producto encontrado", inventario);
             return new JsonResult(Ok(result));
         }
@@ -53,7 +53,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Inventario")] //Filtros
         public IActionResult Insertar()
         {
-            var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+            var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
             List<SelectListItem> items = producto.ConvertAll(d => {
                 return new SelectListItem
                 {
@@ -76,10 +76,10 @@ namespace TECNOSISTEMAS.Controllers
             var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
             //
-            if (!inventario.Validacion())
+            bool existente = _context.Inventario.Any(i => i.IdProducto == inventario.IdProducto && !i.Eliminado && i.Id != inventario.Id);
+            if (!string.IsNullOrEmpty(inventario.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
-                var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+                var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
                 List<SelectListItem> items = producto.ConvertAll(d => {
                     return new SelectListItem
                     {
@@ -89,8 +89,10 @@ namespace TECNOSISTEMAS.Controllers
                     };
                 });
                 inventario.ProductoLista = items;
+                TempData["mensaje"] = inventario.Validacion(existente); //Captura el mensaje del modelo
                 return View(inventario);
             }
+            //
             Inventario nuevoRegistro = new Inventario();
             nuevoRegistro.StockActual = inventario.StockActual;
             nuevoRegistro.StockMinimo = inventario.StockMinimo;
@@ -112,7 +114,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Inventario")] //Filtros
         public IActionResult Editar(Guid InventarioId)
         {
-            var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+            var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
             List<SelectListItem> items = producto.ConvertAll(d => {
                 return new SelectListItem
                 {
@@ -129,10 +131,11 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Inventario")] //Filtros
         public IActionResult Editar(InventarioVm inventario)
         {
-            if (!inventario.Validacion())
+            //
+            bool existente = _context.Inventario.Any(i => i.IdProducto == inventario.IdProducto && !i.Eliminado && i.Id != inventario.Id);
+            if (!string.IsNullOrEmpty(inventario.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
-                var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+                var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
                 List<SelectListItem> items = producto.ConvertAll(d => {
                     return new SelectListItem
                     {
@@ -142,8 +145,10 @@ namespace TECNOSISTEMAS.Controllers
                     };
                 });
                 inventario.ProductoLista = items;
+                TempData["mensaje"] = inventario.Validacion(existente); //Captura el mensaje del modelo
                 return View(inventario);
             }
+            //
             var nuevoRegistro = _context.Inventario.Where(w => w.Id == inventario.Id).FirstOrDefault();
             nuevoRegistro.StockActual = inventario.StockActual;
             nuevoRegistro.StockMinimo = inventario.StockMinimo;
@@ -159,7 +164,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Inventario")] //Filtros
         public IActionResult Eliminar(Guid InventarioId)
         {
-            var producto = _context.Producto.Where(w => w.Eliminado == false).ProjectToType<ProductoVm>().ToList();
+            var producto = _context.Producto.Where(w => w.Eliminado == false).OrderBy(p => p.Nombre).ProjectToType<ProductoVm>().ToList();
             List<SelectListItem> items = producto.ConvertAll(d => {
                 return new SelectListItem
                 {

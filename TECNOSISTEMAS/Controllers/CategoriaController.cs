@@ -24,7 +24,7 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Categoria")] //Filtros
         public IActionResult Index()
         {
-            var categoria = _context.Categoria.Where(w => w.Eliminado == false).ProjectToType<CategoriaVm>().ToList();
+            var categoria = _context.Categoria.Where(w => w.Eliminado == false).OrderBy(w => w.Nombre).ProjectToType<CategoriaVm>().ToList();
             return View(categoria);
         }
         //Insertar
@@ -44,12 +44,14 @@ namespace TECNOSISTEMAS.Controllers
             var base64EncodedBytes = System.Convert.FromBase64String(sesionBase64);
             var sesion = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             UsuarioVm UsuarioObjeto = JsonConvert.DeserializeObject<UsuarioVm>(sesion);
-            //
-            if (!categoria.Validacion())
+
+            bool existente = _context.Categoria.Any(w => !w.Eliminado && w.Nombre == categoria.Nombre && w.Id != categoria.Id);
+            if (!string.IsNullOrEmpty(categoria.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
+                TempData["mensaje"] = categoria.Validacion(existente); //Captura el mensaje del modelo
                 return View(categoria);
             }
+
             Categoria nuevoRegistro = new Categoria();
             nuevoRegistro.Nombre = categoria.Nombre;
             nuevoRegistro.Descripcion = categoria.Descripcion;
@@ -75,9 +77,10 @@ namespace TECNOSISTEMAS.Controllers
         [ClaimRequirement("Categoria")] //Filtros
         public IActionResult Editar(CategoriaVm categoria)
         {
-            if (!categoria.Validacion())
+            bool existente = _context.Categoria.Any(w => !w.Eliminado && w.Nombre == categoria.Nombre && w.Id != categoria.Id);
+            if (!string.IsNullOrEmpty(categoria.Validacion(existente)))
             {
-                TempData["mensaje"] = "Llene todos los campos";
+                TempData["mensaje"] = categoria.Validacion(existente); //Captura el mensaje del modelo
                 return View(categoria);
             }
             var nuevoRegistro = _context.Categoria.Where(w => w.Id == categoria.Id).FirstOrDefault();
@@ -125,7 +128,7 @@ namespace TECNOSISTEMAS.Controllers
                 var errorResult = AppResult.Error(errorMessage);
                 return new JsonResult(BadRequest(errorResult));
             }
-            var categoria = _context.Categoria.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).ProjectToType<CategoriaVm>().ToList();
+            var categoria = _context.Categoria.Where(w => w.Eliminado == false && w.Nombre.ToLower() == vm.Nombre.ToLower()).OrderBy(w => w.Nombre).ProjectToType<CategoriaVm>().ToList();
             var result = categoria.Count == 0 ? AppResult.Error("No se encontro la Categoría") : AppResult.Success("Categoría encontrada", categoria);
             return new JsonResult(Ok(result));
         }
